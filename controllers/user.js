@@ -6,10 +6,19 @@ const cloudinary = require("cloudinary");
 const { cookieToken } = require("../utils/cookieToken");
 
 exports.userSignUp = bigPromise(async (req, res, next) => {
+  const { name, email, password } = req.body;
   let result;
 
   if (!req.files) {
     return res.status(400).send("Please upload a photo");
+  }
+
+  //   if (!(name && email && password)) {
+  //     next(new CustomError("Please provide all the fields", 400));
+  //   }
+
+  if (!(name && email && password)) {
+    return res.status(400).send("Please provide all the fields");
   }
 
   if (req.files) {
@@ -19,15 +28,6 @@ exports.userSignUp = bigPromise(async (req, res, next) => {
       width: 150,
       crop: "scale",
     });
-  }
-
-  const { name, email, password } = req.body;
-  //   if (!(name && email && password)) {
-  //     next(new CustomError("Please provide all the fields", 400));
-  //   }
-
-  if (!(name && email && password)) {
-    return res.status(400).send("Please provide all the fields");
   }
 
   const isUserExist = await User.findOne({ email });
