@@ -3,14 +3,19 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 const app = express();
-
+//middlewares....
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(fileUpload());
 
 const PORT = process.env.PORT || 8000;
 
+//db connection....and starting the server....
 mongoose
   .connect(process.env.URI)
   .then(() => {
