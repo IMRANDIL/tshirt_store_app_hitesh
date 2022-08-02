@@ -7,17 +7,14 @@ const { cookieToken } = require("../utils/cookieToken");
 
 exports.userSignUp = bigPromise(async (req, res, next) => {
   const { name, email, password } = req.body;
+  const files = req.files;
   let result;
-
-  if (!req.files) {
-    return res.status(400).send("Please upload a photo");
-  }
 
   //   if (!(name && email && password)) {
   //     next(new CustomError("Please provide all the fields", 400));
   //   }
 
-  if (!(name && email && password)) {
+  if (!(name && email && password && files)) {
     return res.status(400).send("Please provide all the fields");
   }
 
