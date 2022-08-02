@@ -8,6 +8,8 @@ exports.cookieToken = (user, res) => {
     httpOnly: true,
   };
 
+  user.password = undefined;
+
   res.status(201).cookie("token", token, options).json({
     success: true,
     token,
