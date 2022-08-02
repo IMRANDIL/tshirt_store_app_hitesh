@@ -5,7 +5,14 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+
 const app = express();
+
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 //middlewares....
 app.use(cookieParser());
 app.use(express.json());
