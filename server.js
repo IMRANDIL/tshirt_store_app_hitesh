@@ -20,6 +20,7 @@ app.use(fileUpload());
 //routes.....goes here...
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/v1/user", require("./routes/user"));
 
 const PORT = process.env.PORT || 8000;
 
