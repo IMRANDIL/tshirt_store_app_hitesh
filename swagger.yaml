@@ -40,20 +40,69 @@ components:
       scheme: bearer
 
 paths:
-  /aia:
-    get:
+  /signup:
+    post:
       tags:
-        - String
-      summary: returns a greet message from aia
+        - Authentication
+      summary: returns an object with credetials of a new user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - photo
+              properties:
+                name:
+                  type: string
+                  required: true
+                email:
+                  type: string
+                  required: true
+                password:
+                  type: string
+                  required: true
+                photo:
+                  in: formData
+                  description: The uploaded file data
+                  type: file
+                  required: true
+
       responses:
         200:
           description: All good and success
           content:
             application/json:
               schema:
-                type: string
-                example: "Hello from AIA"
+                type: object
+                properties:
+                  token:
+                    type: string
+                  success:
+                    type: boolean
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      _id:
+                        type: integer
+                  photo:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      secure_url:
+                        type: string
+
         400:
-          description: Bad request
+          description: Bad Request
         500:
-          description: Internal server error
+          description: Internal Server Error

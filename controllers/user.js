@@ -7,6 +7,11 @@ const { cookieToken } = require("../utils/cookieToken");
 
 exports.userSignUp = bigPromise(async (req, res, next) => {
   let result;
+
+  if (!req.files) {
+    return res.status(400).send("Please upload a photo");
+  }
+
   if (req.files) {
     let file = req.files.photo;
     result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
@@ -14,7 +19,6 @@ exports.userSignUp = bigPromise(async (req, res, next) => {
       width: 150,
       crop: "scale",
     });
-    console.log(result);
   }
 
   const { name, email, password } = req.body;
