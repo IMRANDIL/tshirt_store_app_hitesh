@@ -1,11 +1,11 @@
 openapi: "3.0.0"
 info:
-  title: "Learn Swagger and Express - LearnOnline"
-  description: "A course segment about writing documentation with Swagger"
+  title: "Tshirt Store REST API"
+  description: "A Project of Tshirt Store, Creating a REST API for Tshirt Store"
   version: "1.0.1"
   contact:
-    name: "LearnOnline"
-    url: "https://www.learnonline.com"
+    name: "Tshirt Store"
+    url: "https://www.Tshirt.com"
     email: aliimranadil2@gmail.com
 
 # servers:

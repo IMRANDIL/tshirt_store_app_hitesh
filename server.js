@@ -10,15 +10,15 @@ const YAML = require("yamljs");
 
 const app = express();
 
-const swaggerDocument = YAML.load("./swagger.yaml");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 //middlewares....
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(fileUpload());
+
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 8000;
 
