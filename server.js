@@ -10,7 +10,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
+app.use(morgan("tiny"));
 app.use(fileUpload());
 
 const PORT = process.env.PORT || 8000;
