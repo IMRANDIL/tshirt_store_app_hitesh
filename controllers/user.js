@@ -1,10 +1,21 @@
 const User = require("../models/user");
 const bigPromise = require("../middlewares/bigPromise");
 // const CustomError = require("../utils/customError");
-
+const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary");
 const { cookieToken } = require("../utils/cookieToken");
 
 exports.userSignUp = bigPromise(async (req, res, next) => {
+  let result;
+  if (req.files) {
+    let file = req.files.photo;
+    result = await cloudinary.v2.uploader.upload(file, {
+      folder: "users",
+      width: 150,
+      crop: "scale",
+    });
+  }
+
   const { name, email, password } = req.body;
   //   if (!(name && email && password)) {
   //     next(new CustomError("Please provide all the fields", 400));
@@ -23,6 +34,10 @@ exports.userSignUp = bigPromise(async (req, res, next) => {
     name,
     email,
     password,
+    photo: {
+      id: result.public_id,
+      secure_url: result.secure_url,
+    },
   });
   //send the cookie and token to the client....from utils folder.
   cookieToken(user, res);
