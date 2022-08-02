@@ -30,18 +30,18 @@ app.set("view engine", "ejs");
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: "/temp/",
+    tempFileDir: "/tmp/",
   })
 );
 
 //routes.....goes here...
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/v1/user", require("./routes/user"));
+
 app.get("/", (req, res) => {
   res.render("signup");
 });
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/api/v1/user", require("./routes/user"));
 
 const PORT = process.env.PORT || 8000;
 
