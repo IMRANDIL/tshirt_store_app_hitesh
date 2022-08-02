@@ -52,7 +52,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-//verify password....
+//verify password....returns boolean
 
 userSchema.methods.verifyPassword = async function (password) {
   const user = this;
