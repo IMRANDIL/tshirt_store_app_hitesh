@@ -18,31 +18,36 @@ exports.userSignUp = bigPromise(async (req, res, next) => {
     return res.status(400).send("Please provide all the fields");
   }
 
-  if (req.files) {
-    let file = req.files.photo;
-    result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
-      folder: "users",
-      width: 150,
-      crop: "scale",
+  try {
+    if (req.files) {
+      let file = req.files.photo;
+      result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+        folder: "users",
+        width: 150,
+        crop: "scale",
+      });
+    }
+
+    const isUserExist = await User.findOne({ email });
+    if (isUserExist) {
+      return res.status(400).send("User already exist");
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      photo: {
+        id: result.public_id,
+        secure_url: result.secure_url,
+      },
     });
+    //send the cookie and token to the client....from utils folder.
+    cookieToken(user, res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
-
-  const isUserExist = await User.findOne({ email });
-  if (isUserExist) {
-    return res.status(400).send("User already exist");
-  }
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-    photo: {
-      id: result.public_id,
-      secure_url: result.secure_url,
-    },
-  });
-  //send the cookie and token to the client....from utils folder.
-  cookieToken(user, res);
 });
 
 exports.userLogin = bigPromise(async (req, res, next) => {});

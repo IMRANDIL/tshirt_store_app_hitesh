@@ -98,7 +98,7 @@ paths:
                     type: object
                     properties:
                       id:
-                        type: integer
+                        type: string
                       secure_url:
                         type: string
 
