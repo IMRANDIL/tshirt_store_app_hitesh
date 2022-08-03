@@ -247,10 +247,24 @@ exports.updateUserProfile = bigPromise(async (req, res, next) => {
 
     if (req.files) {
       let file = req.files.photo;
+
       const requiredUser = await User.findById(req.user._id);
+
       const photoId = requiredUser.photo.id;
+
       //destroyed the photo on cloudinary..
-      const resp = await cloudinary.v2.uploader.destroy(photoId);
+      cloudinary.v2.uploader.destroy(
+        photoId,
+        {
+          resource_type: "image",
+        },
+        function (err, result) {
+          if (err) {
+            console.log(err);
+          }
+          console.log(result);
+        }
+      );
 
       //upload the photo now...
 
@@ -262,18 +276,18 @@ exports.updateUserProfile = bigPromise(async (req, res, next) => {
 
       newData.photo = {
         id: result.public_id,
-        url: result.secure_url,
+        secure_url: result.secure_url,
       };
     }
 
-    const user = await User.findByIdAndUpdate(req.user._id, newData, {
+    await User.findByIdAndUpdate(req.user._id, newData, {
       new: true,
       runValidators: true,
     });
 
-    //send the response now...
-
-    cookieToken(user, res);
+    res.status(200).json({
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
