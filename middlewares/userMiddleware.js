@@ -13,7 +13,7 @@ exports.isLoggedIn = bigPromise(async (req, res, next) => {
   }
 
   try {
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET); //decode the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); //decode the token
     const user = await User.findById(decoded.id);
     if (!user) {
       return res.status(401).send("Unauthorized, Invalid token");
