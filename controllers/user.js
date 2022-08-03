@@ -122,7 +122,7 @@ exports.forgotPassword = bigPromise(async (req, res, next) => {
 
     const myUrl = `${req.protocol}://${req.get(
       "host"
-    )}/api/v1/password/reset/${forgotToken}`;
+    )}/api/v1/user/password/reset/${forgotToken}`;
 
     const message = `Copy paste this link in our URL and hit enter \n\n ${myUrl}`;
     await mailHelper({
