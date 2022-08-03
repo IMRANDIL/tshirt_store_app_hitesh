@@ -236,3 +236,46 @@ exports.changePassword = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//user profile update.....
+
+exports.updateUserProfile = bigPromise(async (req, res, next) => {
+  try {
+    const newData = {
+      name: req.body.name,
+    };
+
+    if (req.files) {
+      let file = req.files.photo;
+      const requiredUser = await User.findById(req.user._id);
+      const photoId = requiredUser.photo.id;
+      //destroyed the photo on cloudinary..
+      const resp = await cloudinary.v2.uploader.destroy(photoId);
+
+      //upload the photo now...
+
+      const result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+        folder: "users",
+        width: 150,
+        crop: "scale",
+      });
+
+      newData.photo = {
+        id: result.public_id,
+        url: result.secure_url,
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id, newData, {
+      new: true,
+      runValidators: true,
+    });
+
+    //send the response now...
+
+    cookieToken(user, res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
