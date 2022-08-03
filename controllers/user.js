@@ -185,3 +185,23 @@ exports.resetPassword = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//get logged in user details...
+
+exports.getLoggedInUserDetails = bigPromise(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
