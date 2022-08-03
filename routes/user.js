@@ -7,6 +7,7 @@ const {
   resetPassword,
   getLoggedInUserDetails,
   changePassword,
+  updateUserProfile,
 } = require("../controllers/user");
 
 const { isLoggedIn } = require("../middlewares/userMiddleware");
@@ -18,5 +19,6 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/password/reset/:token").post(resetPassword);
 router.route("/userDashboard").get(isLoggedIn, getLoggedInUserDetails);
 router.route("/password/update").put(isLoggedIn, changePassword);
+router.route("/profile/update").put(isLoggedIn, updateUserProfile);
 
 module.exports = router;
