@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bigPromise = require("../middlewares/bigPromise");
+const crypto = require("crypto");
 // const CustomError = require("../utils/customError");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary");
@@ -99,7 +100,7 @@ exports.userLogout = bigPromise(async (req, res, next) => {
   });
 });
 
-//password reset controller.....
+//forgot password controller.....
 
 exports.forgotPassword = bigPromise(async (req, res, next) => {
   const { email } = req.body;
@@ -121,7 +122,7 @@ exports.forgotPassword = bigPromise(async (req, res, next) => {
 
     const myUrl = `${req.protocol}://${req.get(
       "host"
-    )}/password/reset/${forgotToken}`;
+    )}/api/v1/password/reset/${forgotToken}`;
 
     const message = `Copy paste this link in our URL and hit enter \n\n ${myUrl}`;
     await mailHelper({
@@ -138,6 +139,48 @@ exports.forgotPassword = bigPromise(async (req, res, next) => {
     user.forgotPasswordToken = undefined;
     user.forgotPasswordExpiry = undefined;
     await user.save({ validateBeforeSave: false });
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+//reset password controller.....
+
+exports.resetPassword = bigPromise(async (req, res, next) => {
+  const { password, confirmPassword } = req.body;
+  const token = req.params.token;
+
+  const encryptedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  try {
+    const userCheck = await User.findOne({
+      forgotPasswordToken: encryptedToken,
+      forgotPasswordExpiry: {
+        $gt: Date.now(),
+      },
+    });
+
+    if (!userCheck) {
+      return res.status(400).send("Invalid Token or Expired");
+    }
+
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .send("Password and Confirm Password does not match");
+    }
+
+    userCheck.password = password;
+    userCheck.forgotPasswordToken = undefined;
+    userCheck.forgotPasswordExpiry = undefined;
+    await userCheck.save();
+    //send a jwt token....
+
+    cookieToken(userCheck, res);
+  } catch (error) {
     console.log(error);
     res.status(500).send(error);
   }
