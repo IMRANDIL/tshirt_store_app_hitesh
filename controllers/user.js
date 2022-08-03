@@ -4,6 +4,7 @@ const bigPromise = require("../middlewares/bigPromise");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary");
 const { cookieToken } = require("../utils/cookieToken");
+const mailHelper = require("../utils/emailHelper");
 
 exports.userSignUp = bigPromise(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -96,4 +97,38 @@ exports.userLogout = bigPromise(async (req, res, next) => {
     success: true,
     message: "User logged out successfully",
   });
+});
+
+//password reset controller.....
+
+exports.forgotPassword = bigPromise(async (req, res, next) => {
+  const { email } = req.body;
+  let user;
+  try {
+    user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    const forgotToken = user.generateForgotPasswordToken();
+
+    await user.save({ validateBeforeSave: false });
+
+    const myUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/password/reset/${forgotToken}`;
+
+    const message = `Copy paste this link in our URL and hit enter \n\n ${myUrl}`;
+    await mailHelper({
+      email: user.email,
+      subject: "Reset Password",
+      message,
+    });
+  } catch (error) {
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+    await user.save({ validateBeforeSave: false });
+    console.log(error);
+    res.status(500).send(error);
+  }
 });
