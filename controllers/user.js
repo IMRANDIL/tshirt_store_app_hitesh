@@ -103,6 +103,11 @@ exports.userLogout = bigPromise(async (req, res, next) => {
 
 exports.forgotPassword = bigPromise(async (req, res, next) => {
   const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send("Please provide email");
+  }
+
   let user;
   try {
     user = await User.findOne({ email: email.toLowerCase() });
