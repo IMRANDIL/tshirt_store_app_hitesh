@@ -205,3 +205,36 @@ exports.getLoggedInUserDetails = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//change the password....user know the old password..
+
+exports.changePassword = bigPromise(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!(oldPassword && newPassword)) {
+    return res.status(400).send("Please provide all the fields");
+  }
+
+  try {
+    const user = await User.findById(req.user._id).select("+password");
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    const isPasswordCorrect = await user.verifyPassword(oldPassword);
+
+    if (!isPasswordCorrect) {
+      return res.status(400).send("Old password is incorrect");
+    }
+
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
