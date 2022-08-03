@@ -50,4 +50,37 @@ exports.userSignUp = bigPromise(async (req, res, next) => {
   }
 });
 
-exports.userLogin = bigPromise(async (req, res, next) => {});
+exports.userLogin = bigPromise(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!(email && password)) {
+    return res.status(400).send("Please provide all the fields");
+  }
+
+  try {
+    //check if user exist in the database...
+
+    const user = await User.findOne({ email: email.toLowerCase() }).select(
+      "+password"
+    );
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    //check if password is correct...
+
+    const isPasswordCorrect = await user.verifyPassword(password);
+
+    if (!isPasswordCorrect) {
+      return res.status(400).send("Invalid Credentials");
+    }
+
+    //send the cookie and token to the client....from utils folder.
+
+    cookieToken(user, res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
