@@ -229,10 +229,8 @@ exports.changePassword = bigPromise(async (req, res, next) => {
 
     user.password = newPassword;
     await user.save();
-    res.status(200).json({
-      success: true,
-      message: "Password changed successfully",
-    });
+    //update the token now...
+    cookieToken(user, res);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
