@@ -4,9 +4,9 @@ const jwt = require("jsonwebtoken");
 
 exports.isLoggedIn = bigPromise(async (req, res, next) => {
   const token =
-    req.cookies.token ||
-    req.header["Authorization"].replace("Bearer ", "") ||
-    req.body.token;
+    req.cookies?.token ||
+    req.header["Authorization"]?.replace("Bearer ", "") ||
+    req.body?.token;
 
   if (!token) {
     return res.status(401).send("Unauthorized, no token provided");
