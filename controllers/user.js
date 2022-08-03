@@ -124,6 +124,11 @@ exports.forgotPassword = bigPromise(async (req, res, next) => {
       subject: "Reset Password",
       message,
     });
+
+    res.status(200).json({
+      success: true,
+      message: "Email sent successfully",
+    });
   } catch (error) {
     user.forgotPasswordToken = undefined;
     user.forgotPasswordExpiry = undefined;
