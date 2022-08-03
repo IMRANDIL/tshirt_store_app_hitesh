@@ -11,7 +11,7 @@ const mailHelper = async (option) => {
   });
 
   const message = {
-    from: "", //sender address..
+    from: "aliimranadil2@gmail.com", //sender address..
     to: option.email, //receiver address..
     subject: option.subject, //subject..
     text: option.message, //message..
