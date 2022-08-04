@@ -344,3 +344,29 @@ exports.adminGetOneUser = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//admin update one user...
+
+exports.adminUpdateOneUser = bigPromise(async (req, res, next) => {
+  const userId = req.params.id;
+  const { name, role } = req.body;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    user.name = name;
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
