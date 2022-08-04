@@ -52,9 +52,9 @@ exports.createProduct = bigPromise(async (req, res, next) => {
 //get all product...based on where clause class...
 
 exports.getAllProducts = bigPromise(async (req, res, next) => {
-  const resultPerPage = req.query.limit || 6;
+  const resultPerPage = 6;
 
-  // const countProducts = await Product.countDocuments();
+  const totalCountProducts = await Product.countDocuments();
 
   const products = new WhereClause(Product.find(), req.query)
     .search()
@@ -66,5 +66,6 @@ exports.getAllProducts = bigPromise(async (req, res, next) => {
     success: true,
     products,
     filteredProductsCount,
+    totalCountProducts,
   });
 });
