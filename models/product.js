@@ -29,6 +29,49 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
+
+    category: {
+      type: String,
+      required: [true, "Category is required"],
+      enum: {
+        values: ["short-sleeves", "long-sleeves", "sweat-shirts", "hoodies"],
+        message:
+          "Please select category only from- short-sleeves, long-sleeves, sweat-shirts and hoodies",
+      },
+    },
+    brand: {
+      type: String,
+      required: [true, "Brand is required"],
+    },
+    rantings: {
+      type: Number,
+      default: 0,
+    },
+    numberOfReviews: {
+      type: Number,
+      default: 0,
+    },
+    reviews: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: [true, "User is required"],
+        },
+        name: {
+          type: String,
+          required: [true, "Name is required"],
+        },
+        rating: {
+          type: Number,
+          required: [true, "Rating is required"],
+        },
+        comment: {
+          type: String,
+          required: [true, "Comment is required"],
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
