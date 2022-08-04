@@ -378,6 +378,12 @@ exports.adminUserDelete = bigPromise(async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
+    const photoId = requiredUser.photo.id;
+
+    await cloudinary.v2.uploader.destroy(photoId, {
+      resource_type: "image",
+    });
+
     if (!user) {
       return res.status(400).send("User does not exist");
     }
