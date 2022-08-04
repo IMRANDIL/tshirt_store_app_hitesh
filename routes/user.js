@@ -10,6 +10,7 @@ const {
   updateUserProfile,
   adminAllUser,
   managerAllUser,
+  adminGetOneUser,
 } = require("../controllers/user");
 const { customRole } = require("../middlewares/adminMiddleware");
 
@@ -29,6 +30,10 @@ router.route("/profile/update").put(isLoggedIn, updateUserProfile);
 router
   .route("/admin/all-user")
   .get(isLoggedIn, customRole("admin"), adminAllUser);
+
+router
+  .route("/admin/:id")
+  .get(isLoggedIn, customRole("admin"), adminGetOneUser);
 
 //manager only routes...
 
