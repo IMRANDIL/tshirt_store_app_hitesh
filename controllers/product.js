@@ -14,7 +14,7 @@ exports.createProduct = bigPromise(async (req, res, next) => {
   }
 
   if (req.files) {
-    for (let i = 0; i < req.files.length; i++) {
+    for (let i = 0; i < req.files.photos.length; i++) {
       let result = await cloudinary.v2.uploader.upload(
         req.files.photos[i].tempFilePath,
         {
@@ -27,5 +27,22 @@ exports.createProduct = bigPromise(async (req, res, next) => {
         secure_url: result.secure_url,
       });
     }
+  }
+
+  req.body.photos = imagesArray;
+  //end of images...
+
+  req.body.user = req.user._id;
+
+  try {
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
 });
