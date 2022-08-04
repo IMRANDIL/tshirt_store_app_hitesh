@@ -23,4 +23,12 @@ class WhereClause {
     this.base = this.base.find({ ...searchWord });
     return this;
   }
+
+  pager(resultPerPage) {
+    let currentPage = this.bigQuery.page || 1;
+    let offset = (currentPage - 1) * resultPerPage;
+
+    this.base = this.base.limit(resultPerPage).skip(offset);
+    return this;
+  }
 }
