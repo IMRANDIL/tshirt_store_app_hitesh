@@ -29,6 +29,20 @@ class WhereClause {
     delete copBigQ["search"];
     delete copBigQ["page"];
     delete copBigQ["limit"];
+
+    //convert big in to string;
+
+    let bigQueryString = JSON.stringify(copBigQ);
+
+    bigQueryString = bigQueryString.replace(/\b(gte|lte|gt|lt)\b/g, (match) => {
+      return `$${match}`;
+    });
+
+    //convert big in to object;
+
+    const bigQueryInObj = JSON.parse(bigQueryString);
+    this.base = this.base.find(bigQueryInObj);
+    return this;
   }
 
   pager(resultPerPage) {
