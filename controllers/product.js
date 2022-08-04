@@ -62,6 +62,9 @@ exports.getAllProducts = bigPromise(async (req, res, next) => {
 
   const filteredProductsCount = products.length;
 
+  products.pager(resultPerPage);
+  products = await products.base;
+
   res.status(200).json({
     success: true,
     products,
