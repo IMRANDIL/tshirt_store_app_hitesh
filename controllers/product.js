@@ -5,12 +5,20 @@ const cloudinary = require("cloudinary");
 const WhereClause = require("../utils/whereClause");
 
 exports.createProduct = bigPromise(async (req, res, next) => {
+  const { name, price, description } = req.body;
+
+  if (!(name && price && description)) {
+    return res.status(400).json({
+      message: "Please provide all the required fields",
+    });
+  }
+
   //images...
 
   let imagesArray = [];
 
   if (!req.files) {
-    return res.status(401).json({
+    return res.status(400).json({
       message: "Images are required",
     });
   }
