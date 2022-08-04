@@ -293,3 +293,18 @@ exports.updateUserProfile = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//admin all users....
+
+exports.adminAllUser = bigPromise(async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
