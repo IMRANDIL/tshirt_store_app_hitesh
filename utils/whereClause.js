@@ -24,6 +24,13 @@ class WhereClause {
     return this;
   }
 
+  filterProduct() {
+    const copBigQ = { ...this.bigQuery };
+    delete copBigQ["search"];
+    delete copBigQ["page"];
+    delete copBigQ["limit"];
+  }
+
   pager(resultPerPage) {
     let currentPage = this.bigQuery.page || 1;
     let offset = (currentPage - 1) * resultPerPage;
