@@ -9,6 +9,7 @@ const {
   changePassword,
   updateUserProfile,
   adminAllUser,
+  managerAllUser,
 } = require("../controllers/user");
 const { customRole } = require("../middlewares/adminMiddleware");
 
@@ -28,5 +29,11 @@ router.route("/profile/update").put(isLoggedIn, updateUserProfile);
 router
   .route("/admin/all-user")
   .get(isLoggedIn, customRole("admin"), adminAllUser);
+
+//manager routes...
+
+router
+  .route("/manager/all-user")
+  .get(isLoggedIn, customRole("manager"), managerAllUser);
 
 module.exports = router;
