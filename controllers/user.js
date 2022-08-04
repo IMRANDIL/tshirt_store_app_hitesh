@@ -370,3 +370,25 @@ exports.adminUpdateOneUser = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//admin user delete...
+
+exports.adminUserDelete = bigPromise(async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    await user.remove();
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
