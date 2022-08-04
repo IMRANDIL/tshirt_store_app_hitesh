@@ -38,6 +38,7 @@ app.use(
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/user", require("./routes/user"));
+app.use("/api/v1/product", require("./routes/product"));
 
 app.get("/", (req, res) => {
   res.render("signup");
