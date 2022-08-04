@@ -10,7 +10,7 @@ const {
   updateUserProfile,
   adminAllUser,
 } = require("../controllers/user");
-const { authorizationProtect } = require("../middlewares/adminMiddleware");
+const { customRole } = require("../middlewares/adminMiddleware");
 
 const { isLoggedIn } = require("../middlewares/userMiddleware");
 
@@ -27,6 +27,6 @@ router.route("/profile/update").put(isLoggedIn, updateUserProfile);
 
 router
   .route("/admin/all-user")
-  .get(isLoggedIn, authorizationProtect, adminAllUser);
+  .get(isLoggedIn, customRole("admin"), adminAllUser);
 
 module.exports = router;
