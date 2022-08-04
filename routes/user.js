@@ -24,13 +24,13 @@ router.route("/userDashboard").get(isLoggedIn, getLoggedInUserDetails);
 router.route("/password/update").put(isLoggedIn, changePassword);
 router.route("/profile/update").put(isLoggedIn, updateUserProfile);
 
-//admin routes...
+//admin only routes...
 
 router
   .route("/admin/all-user")
   .get(isLoggedIn, customRole("admin"), adminAllUser);
 
-//manager routes...
+//manager only routes...
 
 router
   .route("/manager/all-user")

@@ -323,3 +323,24 @@ exports.managerAllUser = bigPromise(async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+//admin get one user....
+
+exports.adminGetOneUser = bigPromise(async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).send("User does not exist");
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
