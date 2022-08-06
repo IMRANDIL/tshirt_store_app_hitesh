@@ -83,6 +83,10 @@ const orderSchema = new mongoose.Schema(
       default: "Processing",
       required: true,
     },
+
+    deliveredAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
