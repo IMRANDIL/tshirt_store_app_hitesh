@@ -126,7 +126,6 @@ exports.updateProduct = bigPromise(async (req, res, next) => {
       });
     }
 
-    const { name, price, description } = req.body;
     let imagesArray = [];
     if (req.files) {
       //destroy old images...
