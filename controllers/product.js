@@ -229,14 +229,26 @@ exports.addProductReviews = bigPromise(async (req, res, next) => {
     );
 
     if (isUserReviewd) {
-      return res.status(400).json({
-        message: "You have already reviewed this product",
+      product.reviews.forEach((review) => {
+        if (review.user.toString() === req.user._id.toString()) {
+          review.rating = Number(rating);
+          review.comment = comment;
+        }
       });
     }
 
     product.reviews.push(review);
+    product.numberOfReviews = product.reviews.length;
+    product.ratings =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
 
     await product.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Review added Successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

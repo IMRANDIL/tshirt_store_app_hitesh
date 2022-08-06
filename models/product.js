@@ -43,7 +43,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Brand is required"],
     },
-    rantings: {
+    ratings: {
       type: Number,
       default: 0,
     },
