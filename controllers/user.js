@@ -2,7 +2,7 @@ const User = require("../models/user");
 const bigPromise = require("../middlewares/bigPromise");
 const crypto = require("crypto");
 // const CustomError = require("../utils/customError");
-const fileUpload = require("express-fileupload");
+
 const cloudinary = require("cloudinary");
 const { cookieToken } = require("../utils/cookieToken");
 const mailHelper = require("../utils/emailHelper");
