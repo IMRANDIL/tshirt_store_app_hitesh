@@ -8,6 +8,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  addProductReviews,
 } = require("../controllers/product");
 
 //admin route..
@@ -31,5 +32,6 @@ router
 
 router.route("/").get(getAllProducts);
 router.route("/:id").get(getProductById);
+router.route("/addReview").post(isLoggedIn, addProductReviews);
 
 module.exports = router;

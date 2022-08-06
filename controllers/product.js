@@ -200,3 +200,45 @@ exports.deleteProduct = bigPromise(async (req, res, next) => {
     res.status(500).json(error);
   }
 });
+
+//product reviews...
+
+exports.addProductReviews = bigPromise(async (req, res, next) => {
+  const { rating, comment, productId } = req.body;
+
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    //check if user has already reviewed the product...
+
+    const isUserReviewd = product.reviews.find(
+      (review) => review.user.toString() === req.user._id.toString()
+    );
+
+    if (isUserReviewd) {
+      return res.status(400).json({
+        message: "You have already reviewed this product",
+      });
+    }
+
+    product.reviews.push(review);
+
+    await product.save();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
