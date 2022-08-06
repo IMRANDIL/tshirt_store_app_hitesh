@@ -206,6 +206,12 @@ exports.deleteProduct = bigPromise(async (req, res, next) => {
 exports.addProductReviews = bigPromise(async (req, res, next) => {
   const { rating, comment, productId } = req.body;
 
+  if (!productId) {
+    return res.status(400).json({
+      message: "Product id is required",
+    });
+  }
+
   const review = {
     user: req.user._id,
     name: req.user.name,
@@ -253,4 +259,61 @@ exports.addProductReviews = bigPromise(async (req, res, next) => {
     console.log(error);
     res.status(500).json(error);
   }
+});
+
+//delete review...
+
+exports.deleteReview = bigPromise(async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const review = product.reviews.find(
+      (review) => review.user.toString() === req.user._id.toString()
+    );
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Review not found",
+      });
+    }
+
+    product.reviews.pull(review);
+    product.numberOfReviews = product.reviews.length;
+    product.ratings =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Review deleted Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+//get only reviews of one product...
+
+exports.getProductReviews = bigPromise(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return res.status(404).json({
+      message: "Product not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    reviews: product.reviews,
+  });
 });
