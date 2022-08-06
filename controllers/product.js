@@ -64,7 +64,7 @@ exports.getAllProducts = bigPromise(async (req, res, next) => {
 
   const totalCountProducts = await Product.countDocuments();
 
-  const products = new WhereClause(Product.find(), req.query)
+  let products = new WhereClause(Product.find(), req.query)
     .search()
     .filterProduct();
 
