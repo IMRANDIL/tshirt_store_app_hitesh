@@ -31,3 +31,11 @@ exports.createPaymentIntent = bigPromise(async (req, res, next) => {
     res.status(500).json(error);
   }
 });
+
+//SEND RAZOR PAY KEY...
+
+exports.sendRazorPayKey = bigPromise(async (req, res, next) => {
+  res.status(200).json({
+    razorPayKey: process.env.RAZOR_PAY_API_KEY,
+  });
+});
