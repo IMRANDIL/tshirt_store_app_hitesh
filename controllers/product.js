@@ -172,3 +172,31 @@ exports.updateProduct = bigPromise(async (req, res, next) => {
     res.status(500).json(error);
   }
 });
+
+//delete a product...
+
+exports.deleteProduct = bigPromise(async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    //destroy old images...
+    for (let i = 0; i < product.photos.length; i++) {
+      await cloudinary.v2.uploader.destroy(product.photos[i].id);
+    }
+    //end of images...
+    await product.remove();
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
