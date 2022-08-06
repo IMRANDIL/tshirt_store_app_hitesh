@@ -141,7 +141,7 @@ exports.updateProduct = bigPromise(async (req, res, next) => {
         let result = await cloudinary.v2.uploader.upload(
           req.files.photos[i].tempFilePath,
           {
-            folder: "products",
+            folder: "products", //folder name -> .env
           }
         );
 
