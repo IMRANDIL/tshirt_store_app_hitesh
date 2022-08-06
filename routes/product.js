@@ -5,6 +5,7 @@ const {
   createProduct,
   getAllProducts,
   getAllAdminProducts,
+  getProductById,
 } = require("../controllers/product");
 
 //admin route..
@@ -20,5 +21,6 @@ router
 //public route...
 
 router.route("/").get(getAllProducts);
+router.route("/:id").get(getProductById);
 
 module.exports = router;
