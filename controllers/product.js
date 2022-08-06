@@ -152,16 +152,21 @@ exports.updateProduct = bigPromise(async (req, res, next) => {
       }
     }
 
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    product.photos = imagesArray;
+    req.body.photos = imagesArray;
+    //end of images...
 
-    await product.save();
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(200).json({
       success: true,
-      product,
+      updatedProduct,
     });
   } catch (error) {
     console.log(error);
