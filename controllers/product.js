@@ -114,3 +114,57 @@ exports.getProductById = bigPromise(async (req, res, next) => {
     product,
   });
 });
+
+//update admin product...
+
+exports.updateProduct = bigPromise(async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const { name, price, description } = req.body;
+    let imagesArray = [];
+    if (req.files) {
+      //destroy old images...
+
+      for (let i = 0; i < product.photos.length; i++) {
+        await cloudinary.v2.uploader.destroy(product.photos[i].id);
+      }
+
+      //upload new images...
+
+      for (let i = 0; i < req.files.photos.length; i++) {
+        let result = await cloudinary.v2.uploader.upload(
+          req.files.photos[i].tempFilePath,
+          {
+            folder: "products",
+          }
+        );
+
+        imagesArray.push({
+          id: result.public_id,
+          secure_url: result.secure_url,
+        });
+      }
+    }
+
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.photos = imagesArray;
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
