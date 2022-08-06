@@ -80,3 +80,20 @@ exports.getAllProducts = bigPromise(async (req, res, next) => {
     totalCountProducts,
   });
 });
+
+//get all admin products....
+
+exports.getAllAdminProducts = bigPromise(async (req, res, next) => {
+  const products = await Product.find();
+
+  if (!products) {
+    return res.status(404).json({
+      message: "No products found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    products,
+  });
+});
