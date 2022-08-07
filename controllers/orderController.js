@@ -70,3 +70,22 @@ exports.getOneOrder = bigPromise(async (req, res, next) => {
     res.status(500).json(error);
   }
 });
+
+//all orders of a user..
+
+exports.getAllOrders = bigPromise(async (req, res, next) => {
+  const orders = await Order.find({
+    user: req.user._id,
+  });
+
+  if (!orders) {
+    return res.status(404).json({
+      message: "No Order found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    orders,
+  });
+});
