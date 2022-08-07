@@ -71,7 +71,7 @@ exports.getOneOrder = bigPromise(async (req, res, next) => {
   }
 });
 
-//all orders of a user..
+//all orders of a user..logged in user...
 
 exports.getAllOrders = bigPromise(async (req, res, next) => {
   const orders = await Order.find({
@@ -81,6 +81,23 @@ exports.getAllOrders = bigPromise(async (req, res, next) => {
   if (!orders) {
     return res.status(404).json({
       message: "No Order found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    orders,
+  });
+});
+
+//get all orders for admin...
+
+exports.adminOrders = bigPromise(async (req, res, next) => {
+  const orders = await Order.find();
+
+  if (!orders) {
+    return res.status(404).json({
+      message: "No order found",
     });
   }
 
