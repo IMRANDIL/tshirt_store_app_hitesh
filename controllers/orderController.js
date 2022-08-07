@@ -148,3 +148,27 @@ async function updateProductStock(productId, quantity) {
 
   await product.save({ validateBeforeSave: false });
 }
+
+//delete orders......admin related....
+
+exports.deleteOrder = bigPromise(async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    await order.remove();
+
+    res.status(200).json({
+      success: true,
+      message: "Order deleted",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
