@@ -40,6 +40,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/user", require("./routes/user"));
 app.use("/api/v1/products", require("./routes/product"));
 app.use("/api/v1/paymentMethod", require("./routes/paymentRoute"));
+app.use("/api/v1/order", require("./routes/order"));
 
 app.get("/", (req, res) => {
   res.render("signup");
