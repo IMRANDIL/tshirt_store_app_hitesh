@@ -70,6 +70,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    stock: {
+      type: Number,
+      required: [true, "Please add a number in stock"],
+    },
     shippingAmount: {
       type: Number,
       required: true,

@@ -106,3 +106,45 @@ exports.adminOrders = bigPromise(async (req, res, next) => {
     orders,
   });
 });
+
+//update the order...admin...related...
+
+exports.updateOrder = bigPromise(async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    if (order.deliveredAt === "Delivered") {
+      return res.status(400).json({
+        message: "Product already delivered",
+      });
+    }
+
+    order.orderStatus = req.body.orderStatus;
+
+    //apply the updatestock method...
+
+    order.orderItems.forEach(async (item) => {
+      await updateProductStock(item.product, item.quantity);
+    });
+
+    await order.save();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+async function updateProductStock(productId, quantity) {
+  const product = await Product.findById(productId);
+
+  if (product.stock && product.stock > quantity) {
+    product.stock = product.stock - quantity;
+  }
+
+  await product.save({ validateBeforeSave: false });
+}
