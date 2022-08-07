@@ -55,7 +55,7 @@ exports.createOrder = bigPromise(async (req, res, next) => {
 exports.getOneOrder = bigPromise(async (req, res, next) => {
   const orderId = req.params.orderId;
   try {
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate("user", "name email");
     if (!order) {
       return res.status(404).json({
         message: "Order not found",
